@@ -4,7 +4,7 @@
 
 ``` go
 comp := protocompile.Compiler{
-	Resolver: protocompile.WithStandardImports(bsrr.New(bssr.BufLock("path/to/buf.lock"))),
+	Resolver: protocompile.WithStandardImports(bsrr.New(bsrr.BufLock("path/to/buf.lock"))),
 }
 fds, err := comp.Compile(ctx, protos...)
 ```
