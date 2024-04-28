@@ -115,22 +115,9 @@ func BufConfig(configFile string) Option {
 		if config.Version != "v1" {
 			return fmt.Errorf("unsupported lock file version")
 		}
-		r.mu.Lock()
-		defer r.mu.Unlock()
-		for _, dep := range config.Deps {
-			splitted := strings.Split(dep, "/")
-			if len(splitted) != 3 {
-				return fmt.Errorf("dep should be in format <remote>/<owner>/<repository>: %s", dep)
-			}
-			commit := "main"
-			fdset, err := fetchFileDescriptorSet(splitted[1], splitted[2], commit)
-			if err != nil {
-				return err
-			}
-			for _, fd := range fdset.GetFile() {
-				// override if already exists
-				r.fds[fd.GetName()] = fd
-			}
+		opt := BufModule(config.Deps...)
+		if err := opt(r); err != nil {
+			return err
 		}
 		return nil
 	}
