@@ -4,7 +4,7 @@ default: test
 
 ci: depsdev test
 
-test: cert
+test:
 	go test ./... -coverprofile=coverage.out -covermode=count
 
 lint:
