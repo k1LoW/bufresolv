@@ -39,7 +39,7 @@ var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
 }
 
-func Module(module string) Option {
+func BufModule(module string) Option {
 	return func(r *Resolver) error {
 		if !strings.HasPrefix(module, "buf.build/") {
 			return fmt.Errorf("remote should be buf.build")

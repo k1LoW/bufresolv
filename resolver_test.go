@@ -15,7 +15,7 @@ func TestBufLock(t *testing.T) {
 }
 
 func TestModule(t *testing.T) {
-	b, err := New(Module("buf.build/bufbuild/protovalidate/tree/b983156c5e994cc9892e0ce3e64e17e0"))
+	b, err := New(BufModule("buf.build/bufbuild/protovalidate/tree/b983156c5e994cc9892e0ce3e64e17e0"))
 	if err != nil {
 		t.Fatal(err)
 	}
