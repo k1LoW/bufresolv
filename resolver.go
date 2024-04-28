@@ -10,6 +10,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/bufbuild/buf/private/bufpkg/bufconfig"
 	"github.com/bufbuild/buf/private/bufpkg/buflock"
 	"github.com/bufbuild/protocompile"
 	"google.golang.org/protobuf/proto"
@@ -87,6 +88,40 @@ func BufLock(lockFile string) Option {
 				commit = dep.Branch
 			}
 			fdset, err := fetchFileDescriptorSet(dep.Owner, dep.Repository, commit)
+			if err != nil {
+				return err
+			}
+			for _, fd := range fdset.GetFile() {
+				// override if already exists
+				r.fds[fd.GetName()] = fd
+			}
+		}
+		return nil
+	}
+}
+
+func BufConfig(configFile string) Option {
+	return func(r *Resolver) error {
+		b, err := os.ReadFile(configFile)
+		if err != nil {
+			return err
+		}
+		config := bufconfig.ExternalConfigV1{}
+		if err := yaml.Unmarshal(b, &config); err != nil {
+			return err
+		}
+		if config.Version != "v1" {
+			return fmt.Errorf("unsupported lock file version")
+		}
+		r.mu.Lock()
+		defer r.mu.Unlock()
+		for _, dep := range config.Deps {
+			splitted := strings.Split(dep, "/")
+			if len(splitted) != 3 {
+				return fmt.Errorf("dep should be in format <remote>/<owner>/<repository>: %s", dep)
+			}
+			commit := "main"
+			fdset, err := fetchFileDescriptorSet(splitted[1], splitted[2], commit)
 			if err != nil {
 				return err
 			}
