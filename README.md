@@ -3,8 +3,9 @@
 ## Usage
 
 ``` go
+br, _ := bsrr.New(bsrr.BufLock("path/to/buf.lock"))
 comp := protocompile.Compiler{
-	Resolver: protocompile.WithStandardImports(bsrr.New(bsrr.BufLock("path/to/buf.lock"))),
+	Resolver: protocompile.WithStandardImports(br),
 }
-fds, err := comp.Compile(ctx, protos...)
+fds, _ := comp.Compile(ctx, protos...)
 ```
