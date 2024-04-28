@@ -40,28 +40,30 @@ var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
 }
 
-func BufModule(module string) Option {
+func BufModule(modules ...string) Option {
 	return func(r *Resolver) error {
-		if !strings.HasPrefix(module, "buf.build/") {
-			return fmt.Errorf("remote should be buf.build")
-		}
-		splitted := strings.Split(module, "/")
-		if len(splitted) != 3 && !(len(splitted) == 5 && splitted[3] == "tree") {
-			return fmt.Errorf("module should be in format <remote>/<owner>/<repository>[/tree/<branch or commit>]: %s", module)
-		}
-		b := "main"
-		if len(splitted) == 5 {
-			b = splitted[4]
-		}
-		fdset, err := fetchFileDescriptorSet(splitted[1], splitted[2], b)
-		if err != nil {
-			return err
-		}
-		r.mu.Lock()
-		defer r.mu.Unlock()
-		for _, fd := range fdset.GetFile() {
-			// override if already exists
-			r.fds[fd.GetName()] = fd
+		for _, module := range modules {
+			if !strings.HasPrefix(module, "buf.build/") {
+				return fmt.Errorf("remote should be buf.build")
+			}
+			splitted := strings.Split(module, "/")
+			if len(splitted) != 3 && !(len(splitted) == 5 && splitted[3] == "tree") {
+				return fmt.Errorf("module should be in format <remote>/<owner>/<repository>[/tree/<branch or commit>]: %s", module)
+			}
+			b := "main"
+			if len(splitted) == 5 {
+				b = splitted[4]
+			}
+			fdset, err := fetchFileDescriptorSet(splitted[1], splitted[2], b)
+			if err != nil {
+				return err
+			}
+			r.mu.Lock()
+			defer r.mu.Unlock()
+			for _, fd := range fdset.GetFile() {
+				// override if already exists
+				r.fds[fd.GetName()] = fd
+			}
 		}
 		return nil
 	}
