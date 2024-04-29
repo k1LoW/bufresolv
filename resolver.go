@@ -10,8 +10,6 @@ import (
 	"sync"
 	"time"
 
-	"github.com/bufbuild/buf/private/bufpkg/bufconfig"
-	"github.com/bufbuild/buf/private/bufpkg/buflock"
 	"github.com/bufbuild/protocompile"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoregistry"
@@ -24,6 +22,27 @@ var _ protocompile.Resolver = (*Resolver)(nil)
 type Resolver struct {
 	fds map[string]*descriptorpb.FileDescriptorProto
 	mu  sync.RWMutex
+}
+
+type BufLockV1 struct {
+	Version string                `json:"version,omitempty" yaml:"version,omitempty"`
+	Deps    []BufLockDependencyV1 `json:"deps,omitempty" yaml:"deps,omitempty"`
+}
+
+type BufLockDependencyV1 struct {
+	Remote     string    `json:"remote,omitempty" yaml:"remote,omitempty"`
+	Owner      string    `json:"owner,omitempty" yaml:"owner,omitempty"`
+	Repository string    `json:"repository,omitempty" yaml:"repository,omitempty"`
+	Branch     string    `json:"branch,omitempty" yaml:"branch,omitempty"`
+	Commit     string    `json:"commit,omitempty" yaml:"commit,omitempty"`
+	Digest     string    `json:"digest,omitempty" yaml:"digest,omitempty"`
+	CreateTime time.Time `json:"create_time,omitempty" yaml:"create_time,omitempty"`
+}
+
+type BufConfigV1 struct {
+	Version string   `json:"version,omitempty" yaml:"version,omitempty"`
+	Name    string   `json:"name,omitempty" yaml:"name,omitempty"`
+	Deps    []string `json:"deps,omitempty" yaml:"deps,omitempty"`
 }
 
 type Option func(*Resolver) error
@@ -75,7 +94,7 @@ func BufLock(lockFile string) Option {
 		if err != nil {
 			return err
 		}
-		lock := buflock.ExternalConfigV1{}
+		lock := BufLockV1{}
 		if err := yaml.Unmarshal(b, &lock); err != nil {
 			return err
 		}
@@ -108,7 +127,7 @@ func BufConfig(configFile string) Option {
 		if err != nil {
 			return err
 		}
-		config := bufconfig.ExternalConfigV1{}
+		config := BufConfigV1{}
 		if err := yaml.Unmarshal(b, &config); err != nil {
 			return err
 		}
