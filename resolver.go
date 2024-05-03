@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"path/filepath"
+	"slices"
 	"strings"
 	"sync"
 	"time"
@@ -263,19 +264,8 @@ func (r *Resolver) Paths() []string {
 	for path := range r.sources {
 		paths = append(paths, path)
 	}
-	return unique(paths)
-}
-
-func unique(paths []string) []string {
-	set := map[string]struct{}{}
-	for _, path := range paths {
-		set[path] = struct{}{}
-	}
-	var unique []string
-	for path := range set {
-		unique = append(unique, path)
-	}
-	return unique
+	slices.Sort(paths)
+	return slices.Compact(paths)
 }
 
 func (r *Resolver) FindFileByPath(path string) (protocompile.SearchResult, error) {
