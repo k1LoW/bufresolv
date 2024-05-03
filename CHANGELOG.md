@@ -1,5 +1,7 @@
 # Changelog
 
+## [v0.6.1](https://github.com/k1LoW/bufresolv/compare/v0.6.0...v0.6.1) - 2024-05-03
+
 ## [v0.6.0](https://github.com/k1LoW/bufresolv/compare/v0.5.1...v0.6.0) - 2024-05-03
 ### Breaking Changes 🛠
 - Rename pkg name ( `bsrr` -> `bufresolv` ) by @k1LoW in https://github.com/k1LoW/bufresolv/pull/14
