@@ -54,3 +54,19 @@ func TestBufDir(t *testing.T) {
 		t.Errorf("acme/world/v1/world.proto not found in %v", paths)
 	}
 }
+
+func TestPaths(t *testing.T) {
+	r, err := New(BufConfig("testdata/bufroot/helloapis/buf.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := len(r.Paths())
+	r2, err := New(BufConfig("testdata/bufroot/helloapis/buf.yaml"), BufConfig("testdata/bufroot/helloapis/buf.yaml"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	got2 := len(r2.Paths())
+	if got != got2 {
+		t.Errorf("got %d, want %d", got2, got)
+	}
+}
