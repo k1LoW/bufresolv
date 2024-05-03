@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package world.v2;
+
+import "buf/validate/validate.proto";
+
+service WorldService {
+  rpc World(WorldRequest) returns (WorldResponse);
+}
+
+message WorldRequest {
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message WorldResponse {
+  string message = 1;
+}
+

@@ -3,9 +3,9 @@
 ## Usage
 
 ``` go
-br, _ := bsrr.New(bsrr.BufLock("path/to/buf.lock"))
+r, _ := bsrr.New(bsrr.BufDir("path/to/bofroot"))
 comp := protocompile.Compiler{
-	Resolver: protocompile.WithStandardImports(br),
+	Resolver: protocompile.WithStandardImports(r),
 }
-fds, _ := comp.Compile(ctx, protos...)
+fds, _ := comp.Compile(ctx, r.Paths()...)
 ```
