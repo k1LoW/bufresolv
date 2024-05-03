@@ -263,7 +263,19 @@ func (r *Resolver) Paths() []string {
 	for path := range r.sources {
 		paths = append(paths, path)
 	}
-	return paths
+	return unique(paths)
+}
+
+func unique(paths []string) []string {
+	set := map[string]struct{}{}
+	for _, path := range paths {
+		set[path] = struct{}{}
+	}
+	var unique []string
+	for path := range set {
+		unique = append(unique, path)
+	}
+	return unique
 }
 
 func (r *Resolver) FindFileByPath(path string) (protocompile.SearchResult, error) {
