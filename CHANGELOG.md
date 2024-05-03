@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.5.1](https://github.com/k1LoW/bsrr/compare/v0.5.0...v0.5.1) - 2024-05-03
+### Other Changes
+- The return value of Paths should be unique. by @k1LoW in https://github.com/k1LoW/bsrr/pull/12
+
 ## [v0.5.0](https://github.com/k1LoW/bsrr/compare/v0.4.0...v0.5.0) - 2024-05-03
 ### New Features 🎉
 - Support buf ecosystem by @k1LoW in https://github.com/k1LoW/bsrr/pull/10
