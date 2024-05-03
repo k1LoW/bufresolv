@@ -1,9 +1,9 @@
-# Buf Schema Registory Resolver for github.com/bufbuild/protocompile
+# Buf Resolver for github.com/bufbuild/protocompile
 
 ## Usage
 
 ``` go
-r, _ := bsrr.New(bsrr.BufDir("path/to/bofroot"))
+r, _ := bufresolv.New(bufresolv.BufDir("path/to/bofroot"))
 comp := protocompile.Compiler{
 	Resolver: protocompile.WithStandardImports(r),
 }

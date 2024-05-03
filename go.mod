@@ -1,4 +1,4 @@
-module github.com/k1LoW/bsrr
+module github.com/k1LoW/bufresolv
 
 go 1.22.2
 

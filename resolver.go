@@ -1,4 +1,4 @@
-package bsrr
+package bufresolv
 
 import (
 	"bytes"
