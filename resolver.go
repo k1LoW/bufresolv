@@ -75,6 +75,7 @@ var httpClient = &http.Client{
 	Timeout: 5 * time.Second,
 }
 
+// BufModule fetches the file descriptor set from buf.build.
 func BufModule(modules ...string) Option {
 	return func(r *Resolver) error {
 		for _, module := range modules {
@@ -107,6 +108,7 @@ func BufModule(modules ...string) Option {
 	}
 }
 
+// BufLock reads the lock file and fetches the file descriptor set from buf.build.
 func BufLock(lockFile string) Option {
 	return func(r *Resolver) error {
 		if filepath.Base(lockFile) != bufLockFile {
@@ -141,6 +143,7 @@ func BufLock(lockFile string) Option {
 	}
 }
 
+// BufConfig reads the config file and fetches the file descriptor set from buf.build.
 func BufConfig(configFile string) Option {
 	return func(r *Resolver) error {
 		if filepath.Base(configFile) != bufConfigFile {
@@ -165,6 +168,7 @@ func BufConfig(configFile string) Option {
 	}
 }
 
+// BufWork reads the work file and fetches the file descriptor set from buf.build.
 func BufDir(dir string) Option {
 	return func(r *Resolver) error {
 		if _, err := os.Stat(filepath.Join(dir, bufLockFile)); err == nil {
@@ -231,6 +235,7 @@ func BufDir(dir string) Option {
 	}
 }
 
+// New creates a new resolver.
 func New(opts ...Option) (*Resolver, error) {
 	r := &Resolver{
 		fds:     map[string]*descriptorpb.FileDescriptorProto{},
@@ -244,6 +249,7 @@ func New(opts ...Option) (*Resolver, error) {
 	return r, nil
 }
 
+// Paths returns the paths of the file descriptor sets and sources.
 func (r *Resolver) Paths() []string {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
