@@ -1,4 +1,4 @@
-# Buf Resolver for github.com/bufbuild/protocompile
+# Buf resolver for github.com/bufbuild/protocompile
 
 ## Usage
 
