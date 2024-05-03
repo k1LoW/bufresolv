@@ -154,6 +154,16 @@ func New(opts ...Option) (*Resolver, error) {
 	return r, nil
 }
 
+func (r *Resolver) Paths() []string {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	paths := make([]string, 0, len(r.fds))
+	for path := range r.fds {
+		paths = append(paths, path)
+	}
+	return paths
+}
+
 func (r *Resolver) FindFileByPath(path string) (protocompile.SearchResult, error) {
 	result := protocompile.SearchResult{}
 	r.mu.RLock()
