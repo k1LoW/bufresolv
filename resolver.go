@@ -206,6 +206,9 @@ func BufDir(dir string) Option {
 
 		sources := map[string][]byte{}
 		if err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+			if err != nil {
+				return err
+			}
 			if d.IsDir() {
 				return nil
 			}
