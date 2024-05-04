@@ -1,5 +1,7 @@
 # Changelog
 
+## [v0.6.2](https://github.com/k1LoW/bufresolv/compare/v0.6.1...v0.6.2) - 2024-05-04
+
 ## [v0.6.1](https://github.com/k1LoW/bufresolv/compare/v0.6.0...v0.6.1) - 2024-05-03
 
 ## [v0.6.0](https://github.com/k1LoW/bufresolv/compare/v0.5.1...v0.6.0) - 2024-05-03
