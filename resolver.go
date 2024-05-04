@@ -37,29 +37,27 @@ type Resolver struct {
 }
 
 type BufLockV1 struct {
-	Version string                `json:"version,omitempty" yaml:"version,omitempty"`
-	Deps    []BufLockDependencyV1 `json:"deps,omitempty" yaml:"deps,omitempty"`
+	Version string         `yaml:"version,omitempty"`
+	Deps    []BufLockDepV1 `yaml:"deps,omitempty"`
 }
 
-type BufLockDependencyV1 struct {
-	Remote     string    `json:"remote,omitempty" yaml:"remote,omitempty"`
-	Owner      string    `json:"owner,omitempty" yaml:"owner,omitempty"`
-	Repository string    `json:"repository,omitempty" yaml:"repository,omitempty"`
-	Branch     string    `json:"branch,omitempty" yaml:"branch,omitempty"`
-	Commit     string    `json:"commit,omitempty" yaml:"commit,omitempty"`
-	Digest     string    `json:"digest,omitempty" yaml:"digest,omitempty"`
-	CreateTime time.Time `json:"create_time,omitempty" yaml:"create_time,omitempty"`
+type BufLockDepV1 struct {
+	Remote     string `yaml:"remote,omitempty"`
+	Owner      string `yaml:"owner,omitempty"`
+	Repository string `yaml:"repository,omitempty"`
+	Branch     string `yaml:"branch,omitempty"`
+	Commit     string `yaml:"commit,omitempty"`
 }
 
 type BufConfigV1 struct {
-	Version string   `json:"version,omitempty" yaml:"version,omitempty"`
-	Name    string   `json:"name,omitempty" yaml:"name,omitempty"`
-	Deps    []string `json:"deps,omitempty" yaml:"deps,omitempty"`
+	Version string   `yaml:"version,omitempty"`
+	Name    string   `yaml:"name,omitempty"`
+	Deps    []string `yaml:"deps,omitempty"`
 }
 
 type BufWorkV1 struct {
-	Version     string   `json:"version,omitempty" yaml:"version,omitempty"`
-	Directories []string `json:"directories,omitempty" yaml:"directories,omitempty"`
+	Version     string   `yaml:"version,omitempty"`
+	Directories []string `yaml:"directories,omitempty"`
 }
 
 type Option func(*Resolver) error
