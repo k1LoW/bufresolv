@@ -4,7 +4,7 @@ go 1.22.2
 
 require (
 	github.com/bufbuild/protocompile v0.13.0
-	google.golang.org/protobuf v1.33.1-0.20240408130810-98873a205002
+	google.golang.org/protobuf v1.34.0
 	gopkg.in/yaml.v3 v3.0.1
 )
 
