@@ -9,3 +9,7 @@ comp := protocompile.Compiler{
 }
 fds, _ := comp.Compile(ctx, r.Paths()...)
 ```
+
+## References
+
+- [bufbuild/buf](https://github.com/bufbuild/buf): The best way of working with Protocol Buffers.
