@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.7.0](https://github.com/k1LoW/bufresolv/compare/v0.6.5...v0.7.0) - 2024-06-17
+### New Features 🎉
+- Support buf v2 configuration files. by @k1LoW in https://github.com/k1LoW/bufresolv/pull/24
+
 ## [v0.6.5](https://github.com/k1LoW/bufresolv/compare/v0.6.4...v0.6.5) - 2024-06-17
 ### Other Changes
 - chore(deps): bump google.golang.org/protobuf from 1.34.2-0.20240529085009-ca837e5c658b to 1.34.2 in the dependencies group by @dependabot in https://github.com/k1LoW/bufresolv/pull/22
