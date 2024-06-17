@@ -191,6 +191,11 @@ func BufConfig(configFile string) Option {
 			return nil
 		}
 		root := filepath.Dir(configFile)
+		if len(config.Modules) == 0 {
+			if err := r.walkDir(root); err != nil {
+				return err
+			}
+		}
 		for _, m := range config.Modules {
 			if err := r.walkDir(filepath.Join(root, m.Path)); err != nil {
 				return err
