@@ -1,5 +1,7 @@
 # Changelog
 
+## [v0.7.1](https://github.com/k1LoW/bufresolv/compare/v0.7.0...v0.7.1) - 2024-06-17
+
 ## [v0.7.0](https://github.com/k1LoW/bufresolv/compare/v0.6.5...v0.7.0) - 2024-06-17
 ### New Features 🎉
 - Support buf v2 configuration files. by @k1LoW in https://github.com/k1LoW/bufresolv/pull/24
