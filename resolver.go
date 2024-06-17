@@ -31,17 +31,19 @@ const (
 )
 
 type Resolver struct {
+	version string
 	fds     map[string]*descriptorpb.FileDescriptorProto
 	sources map[string][]byte
 	mu      sync.RWMutex
 }
 
-type BufLockV1 struct {
-	Version string         `yaml:"version,omitempty"`
-	Deps    []BufLockDepV1 `yaml:"deps,omitempty"`
+type BufLockV1V2 struct {
+	Version string           `yaml:"version,omitempty"`
+	Deps    []BufLockDepV1V2 `yaml:"deps,omitempty"`
 }
 
-type BufLockDepV1 struct {
+type BufLockDepV1V2 struct {
+	NameV2     string `yaml:"name,omitempty"`
 	Remote     string `yaml:"remote,omitempty"`
 	Owner      string `yaml:"owner,omitempty"`
 	Repository string `yaml:"repository,omitempty"`
@@ -49,15 +51,20 @@ type BufLockDepV1 struct {
 	Commit     string `yaml:"commit,omitempty"`
 }
 
-type BufConfigV1 struct {
-	Version string   `yaml:"version,omitempty"`
-	Name    string   `yaml:"name,omitempty"`
-	Deps    []string `yaml:"deps,omitempty"`
+type BufConfigV1V2 struct {
+	Version string              `yaml:"version,omitempty"`
+	Name    string              `yaml:"name,omitempty"`
+	Modules []BufConfigModuleV2 `yaml:"modules,omitempty"`
+	Deps    []string            `yaml:"deps,omitempty"`
 }
 
 type BufWorkV1 struct {
 	Version     string   `yaml:"version,omitempty"`
 	Directories []string `yaml:"directories,omitempty"`
+}
+
+type BufConfigModuleV2 struct {
+	Path string `yaml:"path"`
 }
 
 type Option func(*Resolver) error
@@ -108,6 +115,7 @@ func BufModule(modules ...string) Option {
 }
 
 // BufLock reads the lock file and fetches the file descriptor set from buf.build.
+// Supported versions are v1 and v2.
 func BufLock(lockFile string) Option {
 	return func(r *Resolver) error {
 		if filepath.Base(lockFile) != bufLockFile {
@@ -117,19 +125,33 @@ func BufLock(lockFile string) Option {
 		if err != nil {
 			return err
 		}
-		lock := BufLockV1{}
+		lock := BufLockV1V2{}
 		if err := yaml.Unmarshal(b, &lock); err != nil {
 			return err
 		}
-		if lock.Version != "v1" {
+		if lock.Version != "v1" && lock.Version != "v2" {
 			return fmt.Errorf("unsupported lock file version")
 		}
+		r.version = lock.Version
 		for _, dep := range lock.Deps {
+			if (dep.Remote == "" || dep.Owner == "" || dep.Repository == "") && dep.NameV2 == "" {
+				return fmt.Errorf("remote/owner/repotitory or name is required")
+			}
 			commit := dep.Commit
 			if dep.Branch != "" {
 				commit = dep.Branch
 			}
-			module := fmt.Sprintf("%s/%s/%s", bufBuildHost, dep.Owner, dep.Repository)
+			owner := dep.Owner
+			repository := dep.Repository
+			if dep.NameV2 != "" {
+				splitted := strings.Split(dep.NameV2, "/")
+				if len(splitted) != 3 {
+					return fmt.Errorf("name should be in format <remote>/<owner>/<repository>: %s", dep.NameV2)
+				}
+				owner = splitted[1]
+				repository = splitted[2]
+			}
+			module := fmt.Sprintf("%s/%s/%s", bufBuildHost, owner, repository)
 			if commit != "" {
 				module = fmt.Sprintf("%s/tree/%s", module, commit)
 			}
@@ -143,6 +165,7 @@ func BufLock(lockFile string) Option {
 }
 
 // BufConfig reads the config file and fetches the file descriptor set from buf.build.
+// Supported versions are v1 and v2.
 func BufConfig(configFile string) Option {
 	return func(r *Resolver) error {
 		if filepath.Base(configFile) != bufConfigFile {
@@ -152,33 +175,50 @@ func BufConfig(configFile string) Option {
 		if err != nil {
 			return err
 		}
-		config := BufConfigV1{}
+		config := BufConfigV1V2{}
 		if err := yaml.Unmarshal(b, &config); err != nil {
 			return err
 		}
-		if config.Version != "v1" {
+		if config.Version != "v1" && config.Version != "v2" {
 			return fmt.Errorf("unsupported lock file version")
 		}
+		r.version = config.Version
 		opt := BufModule(config.Deps...)
 		if err := opt(r); err != nil {
 			return err
+		}
+		if config.Version != "v2" {
+			return nil
+		}
+		root := filepath.Dir(configFile)
+		for _, m := range config.Modules {
+			if err := r.walkDir(filepath.Join(root, m.Path)); err != nil {
+				return err
+			}
 		}
 		return nil
 	}
 }
 
 // BufWork reads the work file and fetches the file descriptor set from buf.build.
+// Supported versions are v1 and v2.
 func BufDir(dir string) Option {
 	return func(r *Resolver) error {
-		if _, err := os.Stat(filepath.Join(dir, bufLockFile)); err == nil {
+		if _, err := os.Stat(filepath.Join(dir, bufConfigFile)); err == nil {
+			opt := BufConfig(filepath.Join(dir, bufConfigFile))
+			if err := opt(r); err != nil {
+				return err
+			}
+			if r.version == "v2" {
+				return nil
+			}
+		} else if _, err := os.Stat(filepath.Join(dir, bufLockFile)); err == nil {
 			opt := BufLock(filepath.Join(dir, bufLockFile))
 			if err := opt(r); err != nil {
 				return err
 			}
-		} else if _, err := os.Stat(filepath.Join(dir, bufConfigFile)); err == nil {
-			opt := BufConfig(filepath.Join(dir, bufConfigFile))
-			if err := opt(r); err != nil {
-				return err
+			if r.version == "v2" {
+				return nil
 			}
 		} else if _, err := os.Stat(filepath.Join(dir, bufWorkFile)); err == nil {
 			b, err := os.ReadFile(filepath.Join(dir, bufWorkFile))
@@ -203,34 +243,9 @@ func BufDir(dir string) Option {
 			return fmt.Errorf("no buf.lock, buf.yaml or buf.work.yaml file found in %s", dir)
 		}
 
-		sources := map[string][]byte{}
-		if err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
-			if err != nil {
-				return err
-			}
-			if d.IsDir() {
-				return nil
-			}
-			if filepath.Ext(path) != ".proto" {
-				return nil
-			}
-			b, err := os.ReadFile(path)
-			if err != nil {
-				return err
-			}
-			rel, err := filepath.Rel(dir, path)
-			if err != nil {
-				return err
-			}
-			sources[rel] = b
-			return nil
-		}); err != nil {
+		// Load local proto files.
+		if err := r.walkDir(dir); err != nil {
 			return err
-		}
-		r.mu.Lock()
-		defer r.mu.Unlock()
-		for path, b := range sources {
-			r.sources[path] = b
 		}
 
 		return nil
@@ -280,6 +295,39 @@ func (r *Resolver) FindFileByPath(path string) (protocompile.SearchResult, error
 		return result, nil
 	}
 	return result, protoregistry.NotFound
+}
+
+func (r *Resolver) walkDir(dir string) error {
+	sources := map[string][]byte{}
+	if err := filepath.WalkDir(dir, func(path string, d fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+		if d.IsDir() {
+			return nil
+		}
+		if filepath.Ext(path) != ".proto" {
+			return nil
+		}
+		b, err := os.ReadFile(path)
+		if err != nil {
+			return err
+		}
+		rel, err := filepath.Rel(dir, path)
+		if err != nil {
+			return err
+		}
+		sources[rel] = b
+		return nil
+	}); err != nil {
+		return err
+	}
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	for path, b := range sources {
+		r.sources[path] = b
+	}
+	return nil
 }
 
 func fetchFileDescriptorSet(owner, repo, branchOrCommit string) (*descriptorpb.FileDescriptorSet, error) {

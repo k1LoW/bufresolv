@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package hello.v2;
+
+import "buf/validate/validate.proto";
+
+service HelloService {
+  rpc Hello(HelloRequest) returns (HelloResponse);
+}
+
+message HelloRequest {
+  string name = 1 [(buf.validate.field).string.min_len = 1];
+}
+
+message HelloResponse {
+  string message = 1;
+}
+
