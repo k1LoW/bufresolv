@@ -6,25 +6,51 @@ import (
 )
 
 func TestBufLock(t *testing.T) {
-	r, err := New(BufLock("testdata/bufroot/helloapis/buf.lock"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	paths := r.Paths()
-	if !slices.Contains(paths, "buf/validate/validate.proto") {
-		t.Errorf("buf/validate/validate.proto not found in %v", paths)
-	}
+	t.Run("v1", func(t *testing.T) {
+		r, err := New(BufLock("testdata/bufroot/helloapis/buf.lock"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		paths := r.Paths()
+		if !slices.Contains(paths, "buf/validate/validate.proto") {
+			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+	})
+
+	t.Run("v2", func(t *testing.T) {
+		r, err := New(BufLock("testdata/bufroot_v2/buf.lock"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		paths := r.Paths()
+		if !slices.Contains(paths, "buf/validate/validate.proto") {
+			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+	})
 }
 
 func TestBufConfig(t *testing.T) {
-	r, err := New(BufConfig("testdata/bufroot/helloapis/buf.yaml"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	paths := r.Paths()
-	if !slices.Contains(paths, "buf/validate/validate.proto") {
-		t.Errorf("buf/validate/validate.proto not found in %v", paths)
-	}
+	t.Run("v1", func(t *testing.T) {
+		r, err := New(BufConfig("testdata/bufroot/helloapis/buf.yaml"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		paths := r.Paths()
+		if !slices.Contains(paths, "buf/validate/validate.proto") {
+			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+	})
+
+	t.Run("v2", func(t *testing.T) {
+		r, err := New(BufConfig("testdata/bufroot_v2/buf.yaml"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		paths := r.Paths()
+		if !slices.Contains(paths, "buf/validate/validate.proto") {
+			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+	})
 }
 
 func TestModule(t *testing.T) {
@@ -39,20 +65,39 @@ func TestModule(t *testing.T) {
 }
 
 func TestBufDir(t *testing.T) {
-	r, err := New(BufDir("testdata/bufroot"))
-	if err != nil {
-		t.Fatal(err)
-	}
-	paths := r.Paths()
-	if !slices.Contains(paths, "buf/validate/validate.proto") {
-		t.Errorf("buf/validate/validate.proto not found in %v", paths)
-	}
-	if !slices.Contains(paths, "acme/hello/v2/hello.proto") {
-		t.Errorf("acme/hello/v2/hello.proto not found in %v", paths)
-	}
-	if !slices.Contains(paths, "acme/world/v1/world.proto") {
-		t.Errorf("acme/world/v1/world.proto not found in %v", paths)
-	}
+	t.Run("v1", func(t *testing.T) {
+		r, err := New(BufDir("testdata/bufroot"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		paths := r.Paths()
+		if !slices.Contains(paths, "buf/validate/validate.proto") {
+			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "acme/hello/v2/hello.proto") {
+			t.Errorf("acme/hello/v2/hello.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "acme/world/v1/world.proto") {
+			t.Errorf("acme/world/v1/world.proto not found in %v", paths)
+		}
+	})
+
+	t.Run("v2", func(t *testing.T) {
+		r, err := New(BufDir("testdata/bufroot_v2"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		paths := r.Paths()
+		if !slices.Contains(paths, "buf/validate/validate.proto") {
+			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "acme/hello/v2/hello.proto") {
+			t.Errorf("acme/hello/v2/hello.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "acme/world/v1/world.proto") {
+			t.Errorf("acme/world/v1/world.proto not found in %v", paths)
+		}
+	})
 }
 
 func TestPaths(t *testing.T) {
