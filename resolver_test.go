@@ -15,6 +15,12 @@ func TestBufLock(t *testing.T) {
 		if !slices.Contains(paths, "buf/validate/validate.proto") {
 			t.Errorf("buf/validate/validate.proto not found in %v", paths)
 		}
+		if slices.Contains(paths, "acme/hello/v2/hello.proto") {
+			t.Errorf("acme/hello/v2/hello.proto found in %v", paths)
+		}
+		if slices.Contains(paths, "acme/world/v1/world.proto") {
+			t.Errorf("acme/world/v1/world.proto found in %v", paths)
+		}
 	})
 
 	t.Run("v2", func(t *testing.T) {
@@ -25,6 +31,12 @@ func TestBufLock(t *testing.T) {
 		paths := r.Paths()
 		if !slices.Contains(paths, "buf/validate/validate.proto") {
 			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+		if slices.Contains(paths, "acme/hello/v2/hello.proto") {
+			t.Errorf("acme/hello/v2/hello.proto found in %v", paths)
+		}
+		if slices.Contains(paths, "acme/world/v1/world.proto") {
+			t.Errorf("acme/world/v1/world.proto found in %v", paths)
 		}
 	})
 }
@@ -39,6 +51,12 @@ func TestBufConfig(t *testing.T) {
 		if !slices.Contains(paths, "buf/validate/validate.proto") {
 			t.Errorf("buf/validate/validate.proto not found in %v", paths)
 		}
+		if slices.Contains(paths, "acme/hello/v2/hello.proto") {
+			t.Errorf("acme/hello/v2/hello.proto found in %v", paths)
+		}
+		if slices.Contains(paths, "acme/world/v1/world.proto") {
+			t.Errorf("acme/world/v1/world.proto found in %v", paths)
+		}
 	})
 
 	t.Run("v2", func(t *testing.T) {
@@ -49,6 +67,12 @@ func TestBufConfig(t *testing.T) {
 		paths := r.Paths()
 		if !slices.Contains(paths, "buf/validate/validate.proto") {
 			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "acme/hello/v2/hello.proto") {
+			t.Errorf("acme/hello/v2/hello.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "acme/world/v1/world.proto") {
+			t.Errorf("acme/world/v1/world.proto not found in %v", paths)
 		}
 	})
 }
