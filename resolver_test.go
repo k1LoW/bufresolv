@@ -75,6 +75,23 @@ func TestBufConfig(t *testing.T) {
 			t.Errorf("acme/world/v1/world.proto not found in %v", paths)
 		}
 	})
+
+	t.Run("v2 no modules", func(t *testing.T) {
+		r, err := New(BufConfig("testdata/bufroot_v2_no_modules/buf.yaml"))
+		if err != nil {
+			t.Fatal(err)
+		}
+		paths := r.Paths()
+		if !slices.Contains(paths, "buf/validate/validate.proto") {
+			t.Errorf("buf/validate/validate.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "helloapis/acme/hello/v2/hello.proto") {
+			t.Errorf("helloapis/acme/hello/v2/hello.proto not found in %v", paths)
+		}
+		if !slices.Contains(paths, "worldapis/acme/world/v1/world.proto") {
+			t.Errorf("worldapis/acme/world/v1/world.proto not found in %v", paths)
+		}
+	})
 }
 
 func TestModule(t *testing.T) {
