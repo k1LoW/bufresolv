@@ -214,6 +214,12 @@ func BufDir(dir string) Option {
 			if err := opt(r); err != nil {
 				return err
 			}
+			if _, err := os.Stat(filepath.Join(dir, bufLockFile)); err == nil {
+				opt := BufLock(filepath.Join(dir, bufLockFile))
+				if err := opt(r); err != nil {
+					return err
+				}
+			}
 			if r.version == "v2" {
 				return nil
 			}
