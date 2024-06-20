@@ -1,5 +1,7 @@
 # Changelog
 
+## [v0.7.3](https://github.com/k1LoW/bufresolv/compare/v0.7.2...v0.7.3) - 2024-06-20
+
 ## [v0.7.2](https://github.com/k1LoW/bufresolv/compare/v0.7.1...v0.7.2) - 2024-06-18
 ### New Features 🎉
 - Overwrite with commit hash in buf.lock by @k1LoW in https://github.com/k1LoW/bufresolv/pull/29
