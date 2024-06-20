@@ -345,12 +345,12 @@ func fetchFileDescriptorSet(owner, repo, branchOrCommit string) (*descriptorpb.F
 	var fdset descriptorpb.FileDescriptorSet
 	u := fmt.Sprintf("https://%s/%s/%s/descriptor/%s", bufBuildHost, owner, repo, branchOrCommit)
 	res, err := httpClient.Get(u)
-	defer func() {
-		_ = res.Body.Close()
-	}()
 	if err != nil {
 		return nil, err
 	}
+	defer func() {
+		_ = res.Body.Close()
+	}()
 	b, err := io.ReadAll(res.Body)
 	if err != nil {
 		return nil, err
