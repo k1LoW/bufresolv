@@ -72,7 +72,7 @@ type Option func(*Resolver) error
 var httpClient = &http.Client{
 	Transport: &http.Transport{
 		DialContext: (&net.Dialer{
-			Timeout: time.Second,
+			KeepAlive: 5 * time.Minute,
 		}).DialContext,
 		TLSHandshakeTimeout: time.Second,
 		IdleConnTimeout:     time.Second,
