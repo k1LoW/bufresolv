@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.7.5](https://github.com/k1LoW/bufresolv/compare/v0.7.4...v0.7.5) - 2024-11-25
+### Other Changes
+- chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot in https://github.com/k1LoW/bufresolv/pull/36
+
 ## [v0.7.4](https://github.com/k1LoW/bufresolv/compare/v0.7.3...v0.7.4) - 2024-08-22
 ### Fix bug 🐛
 - Unset DialContext.Timeout by @k1LoW in https://github.com/k1LoW/bufresolv/pull/32
