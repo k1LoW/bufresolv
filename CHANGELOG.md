@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.7.6](https://github.com/k1LoW/bufresolv/compare/v0.7.5...v0.7.6) - 2024-12-23
+### Other Changes
+- chore(deps): bump google.golang.org/protobuf from 1.35.2 to 1.36.0 in the dependencies group by @dependabot in https://github.com/k1LoW/bufresolv/pull/38
+
 ## [v0.7.5](https://github.com/k1LoW/bufresolv/compare/v0.7.4...v0.7.5) - 2024-11-25
 ### Other Changes
 - chore(deps): bump the dependencies group across 1 directory with 2 updates by @dependabot in https://github.com/k1LoW/bufresolv/pull/36
