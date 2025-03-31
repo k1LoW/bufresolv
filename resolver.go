@@ -89,7 +89,7 @@ func BufModule(modules ...string) Option {
 				return fmt.Errorf("remote should be buf.build")
 			}
 			splitted := strings.Split(module, "/")
-			if len(splitted) != 3 && !(len(splitted) == 5 && splitted[3] == "tree") {
+			if len(splitted) != 3 && (len(splitted) != 5 || splitted[3] != "tree") {
 				return fmt.Errorf("module should be in format <remote>/<owner>/<repository>[/tree/<branch or commit>]: %s", module)
 			}
 			b := "main"
