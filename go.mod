@@ -1,10 +1,9 @@
 module github.com/k1LoW/bufresolv
 
 go 1.22.2
-
 require (
 	github.com/bufbuild/protocompile v0.14.1
-	google.golang.org/protobuf v1.36.5
+	google.golang.org/protobuf v1.36.6
 	gopkg.in/yaml.v3 v3.0.1
 )
 
