@@ -1,5 +1,10 @@
 # Changelog
 
+## [v0.7.11](https://github.com/k1LoW/bufresolv/compare/v0.7.10...v0.7.11) - 2026-06-22
+
+### Other Changes
+- chore(deps): bump actions/checkout from 6 to 7 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/bufresolv/pull/59
+
 ## [v0.7.10](https://github.com/k1LoW/bufresolv/compare/v0.7.9...v0.7.10) - 2025-12-17
 ### Other Changes
 - chore(deps): bump google.golang.org/protobuf from 1.36.6 to 1.36.7 in the dependencies group by @dependabot[bot] in https://github.com/k1LoW/bufresolv/pull/49
