@@ -1,6 +1,6 @@
 module github.com/k1LoW/bufresolv
 
-go 1.24
+go 1.26.8
 
 require (
 	github.com/bufbuild/protocompile v0.14.1
